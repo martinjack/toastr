@@ -217,6 +217,14 @@ Flip the toastr to be displayed properly for right-to-left languages.
 toastr.options.rtl = true;
 ```
 
+### Sound
+Sound notication
+```js
+toastr.options.sound = false;
+toastr.options.nameSound = 'notify.mp3';
+toastr.options.nameSound = 'js/notify.mp3';
+```
+
 ## Building Toastr
 
 To build the minified and css versions of Toastr you will need [node](http://nodejs.org) installed. (Use Homebrew or Chocolatey.)

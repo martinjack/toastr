@@ -7,6 +7,7 @@ var plug = require('gulp-load-plugins')();
 var paths = {
     js: './toastr.js',
     less: './toastr.less',
+    sound: './notify.mp3',
     report: './report',
     build: './build'
 };
@@ -69,11 +70,22 @@ gulp.task('css', function () {
         .pipe(plug.rename('toastr.min.css'))
         .pipe(gulp.dest(paths.build));
 });
+/**
+ * 
+ * Copy sound
+ * 
+ */
+gulp.task('sound', function () {
+    log('Copying sound');
 
+    return gulp.src(paths.sound)
+        .pipe(gulp.dest(paths.build));
+
+});
 /**
  * Build js and css
  */
-gulp.task('default', ['js', 'css'], function () {
+gulp.task('default', ['js', 'css', 'sound'], function () {
     log('Analyze, Build CSS and JS');
 });
 

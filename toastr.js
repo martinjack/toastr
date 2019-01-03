@@ -33,7 +33,7 @@
                 options: {},
                 subscribe: subscribe,
                 success: success,
-                version: '2.1.4',
+                version: '2.1.5',
                 warning: warning
             };
 
@@ -121,14 +121,14 @@
 
             // internal functions
 
-            function clearContainer (options) {
+            function clearContainer(options) {
                 var toastsToClear = $container.children();
                 for (var i = toastsToClear.length - 1; i >= 0; i--) {
                     clearToast($(toastsToClear[i]), options);
                 }
             }
 
-            function clearToast ($toastElement, options, clearOptions) {
+            function clearToast($toastElement, options, clearOptions) {
                 var force = clearOptions && clearOptions.force ? clearOptions.force : false;
                 if ($toastElement && (force || $(':focus', $toastElement).length === 0)) {
                     $toastElement[options.hideMethod]({
@@ -190,7 +190,9 @@
                     preventDuplicates: false,
                     progressBar: false,
                     progressClass: 'toast-progress',
-                    rtl: false
+                    rtl: false,
+                    sound: false,
+                    nameSound: 'notify.mp3'
                 };
             }
 
@@ -269,6 +271,7 @@
                     setRTL();
                     setSequence();
                     setAria();
+                    setSound();
                 }
 
                 function setAria() {
@@ -276,7 +279,7 @@
                     switch (map.iconClass) {
                         case 'toast-success':
                         case 'toast-info':
-                            ariaValue =  'polite';
+                            ariaValue = 'polite';
                             break;
                         default:
                             ariaValue = 'assertive';
@@ -321,7 +324,7 @@
                     $toastElement.hide();
 
                     $toastElement[options.showMethod](
-                        {duration: options.showDuration, easing: options.showEasing, complete: options.onShown}
+                        { duration: options.showDuration, easing: options.showEasing, complete: options.onShown }
                     );
 
                     if (options.timeOut > 0) {
@@ -438,13 +441,49 @@
                     clearTimeout(intervalId);
                     progressBar.hideEta = 0;
                     $toastElement.stop(true, true)[options.showMethod](
-                        {duration: options.showDuration, easing: options.showEasing}
+                        { duration: options.showDuration, easing: options.showEasing }
                     );
                 }
 
                 function updateProgress() {
                     var percentage = ((progressBar.hideEta - (new Date().getTime())) / progressBar.maxHideTime) * 100;
                     $progressElement.width(percentage + '%');
+                }
+
+                function setSound() {
+
+                    var options = getOptions();
+
+                    if (options.sound) {
+
+                        var audio = new AudioContext() || new webkitAudioContext(), request = new XMLHttpRequest();
+
+                        request.open('GET', options.nameSound, true);
+
+                        request.responseType = 'arraybuffer';
+
+                        request.onload = function () {
+
+                            audio.decodeAudioData(request.response, onDecoded);
+
+                        }
+
+                        function onDecoded(buffer) {
+
+                            var bufferSource = audio.createBufferSource();
+
+                            bufferSource.buffer = buffer;
+
+                            bufferSource.connect(audio.destination);
+
+                            bufferSource.start();
+
+                        }
+
+                        request.send();
+
+                    }
+
                 }
             }
 
