@@ -218,7 +218,7 @@ toastr.options.rtl = true;
 ```
 
 ### Sound
-Sound notication
+Sound notification
 ```js
 toastr.options.sound = false;
 toastr.options.nameSound = 'notify.mp3';
